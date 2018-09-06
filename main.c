@@ -28,9 +28,9 @@ static void
 task1(void *args) {
 
 		int c = '0' - 1;
-    
+
 		for (;;) {
-			gpio_toggle(GPIOB,GPIO3);
+			gpio_toggle(GPIOB,GPIO3); //blink built-in LED
 			vTaskDelay(pdMS_TO_TICKS(1000)); //500ms Delay
 			if ( ++c >= 'Z' ) {
 			 	uart_putc(c);
@@ -59,6 +59,8 @@ static void gpio_setup(void)
 	/* Setup USART1 TX pin as alternate function. */
 	gpio_mode_setup(GPIOB, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO6);
 	gpio_set_af(GPIOB, GPIO_AF7, GPIO6);
+  /* Setup PB3 as ouput for blinking the built-in LED */
+	gpio_mode_setup(GPIOB, GPIO_MODE_OUTPUT, GPIO_PUPD_PULLUP , GPIO3);
 }
 
 static void clock_setup(void)
@@ -77,10 +79,8 @@ static void clock_setup(void)
 	/* either rcc_wait_for_osc_ready() or do other things */
 
 	/* Enable clocks for the ports we need */
-
 	rcc_periph_clock_enable(RCC_GPIOB);
 	rcc_periph_clock_enable(RCC_USART1);
-
 
 	rcc_set_sysclk_source(RCC_CFGR_SW_PLL); /* careful with the param here! */
 	rcc_wait_for_sysclk_status(RCC_PLL);
@@ -93,16 +93,14 @@ static void clock_setup(void)
 int
 main(void) {
 
-
   clock_setup();
 	gpio_setup();
 	uart_setup();
-	gpio_mode_setup(GPIOB, GPIO_MODE_OUTPUT, GPIO_PUPD_PULLUP , GPIO3);
-	xTaskCreate(task1,"LED",100,NULL,configMAX_PRIORITIES-1,NULL);
+
+	xTaskCreate(task1,"USART",100,NULL,configMAX_PRIORITIES-1,NULL);
 	vTaskStartScheduler();
 
 	for (;;);
 
 	return 0;
 }
-
