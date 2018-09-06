@@ -69,7 +69,7 @@ main(void) {
 	gpio_setup();
 	uart_setup();
 
-	xTaskCreate(task1,"LED",100,NULL,configMAX_PRIORITIES-1,NULL);
+	xTaskCreate(task1,"USART",100,NULL,configMAX_PRIORITIES-1,NULL);
 	vTaskStartScheduler();
 
 	for (;;);
