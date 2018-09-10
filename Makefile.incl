@@ -35,7 +35,7 @@ TEMP1 		= $(patsubst %.c,%.o,$(SRCFILES))
 TEMP2		= $(patsubst %.asm,%.o,$(TEMP1))
 OBJS 		= $(patsubst %.cpp,%.o,$(TEMP2))
 
-LDSCRIPT	?= $(TOP_DIR)/stm32f103c8t6.ld
+LDSCRIPT	?= $(TOP_DIR)/STM32L432KCU6.ld
 
 TGT_CFLAGS	+= $(OPT) $(CSTD)
 TGT_CFLAGS	+= $(ARCH_FLAGS)
@@ -106,7 +106,7 @@ print-%:
 	$(OBJDUMP) -S $(*).elf > $(*).list
 
 %.elf %.map: $(OBJS) $(LDSCRIPT)
-	printf "hello world\n\n\n"
+	@#printf "  MAPPING \n"
 	$(LD) $(TGT_LDFLAGS) $(LDFLAGS) $(OBJS) $(LDLIBS) -o $(*).elf
 	$(SIZE) $(BINARY).elf
 
