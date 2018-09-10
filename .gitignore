@@ -1,2 +1,6 @@
+*.d
+*.o
+*.elf
+*.map
 rtos
 libopencm3
